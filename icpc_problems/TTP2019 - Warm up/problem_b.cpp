@@ -2,57 +2,54 @@
 using namespace std;
 
 int main() {
-    short n, r, res;
-    short Ll, Lr, p, q, i, j;
-    short heat = 0;
-    cin >> n;
-    cin >> r;
-    char* arr = new char[n];
-    for (int k = 0; k < n; ++k) {
-        cin >> arr[k];
-    }
+	short n, r, res, Ll, Lr, p, q, i, j;
+	short heat = 0;
+	bool left_p = true, right_p = true;
+	cin >> n;
+	cin >> r;
+	char* arr = new char[n];
+	for (short k = 0; k < n; ++k) {
+		cin >> arr[k];
+	}
 
-    Ll = -1;
-    Lr = n;
-    res = 0;
-    while (Ll + 1 < Lr && heat < n) {
-        p = Ll + r;
-        q = Lr - r;
-        i = p;
-        j = q;
-        // Calentados lado izquierdo = Ll + 1
-        // Calentados lado derecho = n - Lr 
-        // If (Ll) + ((n - Lr) + 1) >= n EXIT
-        while (arr[i] != '1' && i > p - r + 1)
-            --i;
-        //if (arr[i] != '1' && i <= j) //i se detiene antes de llegar a una posible intersección, IMPOSIBLE
-            //break;
-        if(arr[i] == '1') {
-            Ll = i + r - 1;
-            heat = (Ll + 1) + (n - Lr);
-            //cout << "i: " << i << "heat: " << heat << endl;
-            ++res;
-        }   
+	Ll = -1;
+	Lr = n;
+	res = 0;
+	while (Ll + 1 < Lr && (left_p || right_p) && heat < n) {
+		p = Ll + r;
+		q = Lr - r;
+		i = p;
+		j = q;
+	
+		if (left_p == true) {
+			while (arr[i] != '1' && i > 0 && i > p - 2 * (r - 1))
+				--i;
+			if (arr[i] == '1') {
+				Ll = i + r - 1;
+				heat = (Ll + 1) + (n - Lr);
+				++res;
+			}
+			else left_p = false; // Pointer 1 death
+		}
 
-        if (heat >= n)
-            break;
+		if (heat >= n)
+			break;
 
-        while (arr[j] != '1' && j < q + r - 1) 
-            ++j;
-        if (arr[j] != '1') 
-            break;
-        else if(arr[j] == '1') {
-            Lr = j - r + 1;
-            heat = (Ll + 1) + (n - Lr);
-            //cout << "j: " << j << "heat: " << heat << endl;
-            ++res;
-        }
-        
-    }
+		if (right_p == true) {
+			while (arr[j] != '1' && j < (n - 1) && j < q + 2 * (r - 1))
+				++j;
+			if (arr[j] == '1') {
+				Lr = j - r + 1;
+				heat = (Ll + 1) + (n - Lr);
+				++res;
+			}
+			else right_p = false; // Pointer 2 death
+		}
+	}
 
-    if (res == 0)
-        cout << -1 << endl;
-    else 
-        cout << res << endl;
-    return 0;
+	if (left_p == false && right_p == false)
+		cout << -1 << endl;
+	else
+		cout << res << endl;
+	return 0;
 }
