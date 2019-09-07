@@ -20,7 +20,7 @@ int main()
 }
 
 long long int binomial_coefficient(int n, int k) {
-	//cout << "Num: " << (k - (n - 1)) << " | Den: " << n << endl;
+	cout << "Num: " << (k - (n - 1)) << " | Den: " << n << endl;
 	if (n == 1)
 		return k; // k / 1
 	else return binomial_coefficient(n - 1, k) * (k - (n - 1)) / n; //(to avoid floor function)
