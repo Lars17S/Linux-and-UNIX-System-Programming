@@ -1,13 +1,12 @@
 #include <iostream>
 #include <unordered_map>
-#include <map>
 
 using namespace std;
 
 int main() {
-    short t;
-    cin >> t;
-    for (short i = 0; i < t; ++i) {
+    short p;
+    cin >> p;
+    for (short i = 0; i < p; ++i) {
         int n;
         cin >> n;
         unordered_map<int, int> val;

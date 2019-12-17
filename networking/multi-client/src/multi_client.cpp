@@ -16,7 +16,6 @@ int main(int argc, char* argv[]) {
 	// WSADATA structure contains information about the Windows Sockets implementation.
 	WSADATA wsData;
 	WORD ver = MAKEWORD(2, 2);
-	int portno;
 
 	if (argc < 2) {
 		cerr << "Port not provided!" << endl;
@@ -40,12 +39,11 @@ int main(int argc, char* argv[]) {
 	}
 
 	// Bind the ip address and port to a socket
-	portno = atoi(argv[1]);
 	sockaddr_in sock_struct;
 	sock_struct.sin_family = AF_INET;
-	sock_struct.sin_port = htons(portno);
+	sock_struct.sin_port = htons(atoi(argv[1]));
 	// Convert IPv4 and IPv6 addresses from text to binary form
-	inet_pton(AF_INET, "0.0.0.0", &sock_struct.sin_addr);
+	sock_struct.sin_addr.S_un.S_addr = INADDR_ANY;
 
 	bind(listening, (sockaddr*)&sock_struct, sizeof(sock_struct));
 
@@ -108,24 +106,24 @@ int main(int argc, char* argv[]) {
 					// Check to see if it is a command. \quit kills the server
 					if (buf[0] == '\\') {
 						string cmd = string(buf, bytesIn);
-						if (cmd.compare("\\quit") == 0) {
+						if (cmd == "\\quit") {
 							running = false;
 							break;
 						}
+
+						// Unknown command
+						continue;
 					}
 
-					// Unknown command
-					continue;
-				}
-
-				// Send message to other clients
-				for (int i = 0; i < master.fd_count; i++) {
-					SOCKET outSock = master.fd_array[i];
-					if (outSock != listening && outSock != sock) {
-						ostringstream ss;
-						ss << "SOCKET#" << sock << ": " << buf << "\r\n";
-						string strOut = ss.str();
-						send(outSock, strOut.c_str(), strOut.size() + 1, 0);
+					// Send message to other clients
+					for (int i = 0; i < master.fd_count; i++) {
+						SOCKET outSock = master.fd_array[i];
+						if (outSock != listening && outSock != sock) {
+							ostringstream ss;
+							ss << "SOCKET#" << sock << ": " << buf << "\r\n";
+							string strOut = ss.str();
+							send(outSock, strOut.c_str(), strOut.size() + 1, 0);
+						}
 					}
 				}
 			}
@@ -151,6 +149,7 @@ int main(int argc, char* argv[]) {
 	// Cleanup winsock
 	WSACleanup();
 	system("pause");
+	return 0;
 }
 
 // source: https://bitbucket.org/sloankelly/youtube-source-repository/src/39d0e0460016338163d43d9bc01d4a45b1826619/cpp/networking/MultipleClientsBarebonesServer/MultipleClientsBarebonesServer/main.cpp?at=master
