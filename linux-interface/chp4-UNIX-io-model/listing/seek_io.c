@@ -6,8 +6,8 @@
 #include <unistd.h>
 #include <ctype.h>
 #include <stdio.h>
-#include "../useful-functions/get_num.h"
-#include "../useful-functions/get_num.c"
+#include "../../useful-functions/get_num.h"
+#include "../../useful-functions/get_num.c"
 
 extern int errno;
 void errorHandler();

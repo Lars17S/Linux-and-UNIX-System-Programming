@@ -8,8 +8,9 @@
     contains constructs that refer to file control */
 #include <fcntl.h>
 #include <sys/types.h>
+#include <stdlib.h>
 //  Library created for utilities
-#include "tlpi_hdr.h"
+//  #include "tlpi_hdr.h"
 
 #ifndef BUF_SIZE
 #define BUF_SIZE 1024 /* Allow "cc -D" to ovveride function */
@@ -53,7 +54,7 @@ int main(int argc, char *argv[]) {
     if (close(outputFd) == -1) 
         errExit("close output");
     
-    exit(EIXT_SUCCESS);
+    exit(EXIT_SUCCESS);
 }
 
 // The Linux Programming Interface, pag 71
