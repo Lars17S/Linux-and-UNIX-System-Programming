@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
         containing '\0') to that area. */
     bzero(&servaddr, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(13);
+    servaddr.sin_port = htons(12001);
     /*  inet_pton - convert IPv4 and IPv6 addresses from text to binary form. */
     if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) <= 0) {
         perror("inet_pton error");
@@ -54,3 +54,5 @@ int main(int argc, char *argv[]) {
         
     exit(EXIT_SUCCESS);
 }
+
+/*  Usage example: ./daytimetcpcli 0.0.0.0 */
