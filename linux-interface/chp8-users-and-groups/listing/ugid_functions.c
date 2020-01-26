@@ -28,7 +28,7 @@ __uid_t userIdFromName(const char *name) {
     if (*endptr == '\0') 
         return u;
     
-    pwd = getpwdnam(name);
+    pwd = getpwnam(name);
     if (pwd == NULL)
         return -1;
     
