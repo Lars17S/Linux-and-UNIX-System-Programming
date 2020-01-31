@@ -34,3 +34,12 @@ int main(int argc, char *argv[]) {
     sysconfPrint("_SC_RTSIG_MAX:        ", _SC_RTSIG_MAX);
     exit(EXIT_SUCCESS);
 }
+
+/*  OUTPUT:
+    _SG_ARG_MAX            2097152
+    _SC_LOGIN_NAME_MAX     256
+    _SC_OPEN_MAX:          1024
+    _SC_NGROUPS_MAX:       65536
+    _SC_PAGESIZE:          4096
+    _SC_RTSIG_MAX:         32
+*/
