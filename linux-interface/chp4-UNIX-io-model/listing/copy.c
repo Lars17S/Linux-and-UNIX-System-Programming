@@ -9,8 +9,12 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <stdlib.h>
+#include <unistd.h>
 //  Library created for utilities
-//  #include "tlpi_hdr.h"
+
+#include "../../useful-functions/error_handler.h"
+#include "../../useful-functions/error_handler.c"
+
 
 #ifndef BUF_SIZE
 #define BUF_SIZE 1024 /* Allow "cc -D" to ovveride function */
@@ -26,26 +30,35 @@ int main(int argc, char *argv[]) {
     ssize_t numRead;
     char buf[BUF_SIZE];
 
-    if (argc != 3 || strcmp(argv[1], "-- help") == 0) 
-        usageErr("%s old-file new-file\n", argv[0]);
+    if (argc != 3 || strcmp(argv[1], "-- help") == 0) {
+        printf("Invalid command-line argument");
+        exit(EXIT_FAILURE);
+    }
 
     //  Open input and output files
     /*  open(pathname, flags, mode*): In this case, flag is the permission read only. */
     inputFd = open(argv[1], O_RDONLY);
 
-    openFlags = O_CREAT | O_WRONLY | O_TRUNC;
+    openFlags = O_CREAT | O_WRONLY | O_TRUNC | O_SYNC;
     filePerms = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP |
                 S_IROTH | S_IWOTH; /* permissions: rw(owner)-rw(user)-rw(other) */
     outputFd = open(argv[2], openFlags, filePerms);
-    if (outputFd == -1)
-        errExit("opening file %s", argv[2]);
+    if (outputFd == -1) {
+        char str[128] = "opening file ";
+        strcat(str, argv[2]);
+        errExit(str);
+    }
+        
 
     /*  Transfer data until we encounter end of input or an error */
 
     /* read and wirte system calls returns the number of bytes read/written */
-    while ((numRead == read(inputFd, buf, BUF_SIZE)) > 0) 
-        if (write(outputFd, buf, numRead) != numRead)
-            fatal("Could not write whole buffer");
+    while ((numRead = read(inputFd, buf, BUF_SIZE)) > 0)
+        if (write(outputFd, buf, numRead) != numRead) {
+            printf("Could not write whole buffer\n");
+            break;
+        }
+            
     if (numRead == -1) 
         errExit("read");
     
