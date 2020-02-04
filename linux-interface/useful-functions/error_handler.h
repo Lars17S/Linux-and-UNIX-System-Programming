@@ -7,5 +7,6 @@
 #include <errno.h>
 
 void errExit(const char *msg);
+void invalidCmdLineArg();
 
 #endif
